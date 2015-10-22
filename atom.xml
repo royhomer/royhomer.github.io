@@ -4,7 +4,7 @@
   <title><![CDATA[Royhomer Octopress Blog]]></title>
   <link href="http://royhomer.github.io/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-10-22T16:23:34+08:00</updated>
+  <updated>2015-10-22T17:07:03+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[royhomer]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[一种程序的博客方式]]></title>
+    <link href="http://royhomer.github.io/blog/2015/10/22/%5B%3F%5D-chong-cheng-xu-de-bo-ke-fang-shi/"/>
+    <updated>2015-10-22T17:06:45+08:00</updated>
+    <id>http://royhomer.github.io/blog/2015/10/22/[?]-chong-cheng-xu-de-bo-ke-fang-shi</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[第一篇博客]]></title>
