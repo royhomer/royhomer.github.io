@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[罗宏的个人技术博客]]></title>
-  <link href="http://royhomer.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: 博客相关 | 罗宏的个人技术博客]]></title>
+  <link href="http://royhomer.github.io/blog/categories/bo-ke-xiang-guan/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
   <updated>2015-10-22T22:26:40+08:00</updated>
   <id>http://royhomer.github.io/</id>
@@ -20,15 +20,6 @@
     <id>http://royhomer.github.io/blog/2015/10/22/[?]-chong-cheng-xu-de-bo-ke-fang-shi</id>
     <content type="html"><![CDATA[<!-- more -->
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[第一篇博客]]></title>
-    <link href="http://royhomer.github.io/blog/2015/10/22/di-%5B%3F%5D-pian-bo-ke/"/>
-    <updated>2015-10-22T16:21:39+08:00</updated>
-    <id>http://royhomer.github.io/blog/2015/10/22/di-[?]-pian-bo-ke</id>
-    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   
