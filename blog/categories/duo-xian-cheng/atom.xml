@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[罗宏的个人技术博客]]></title>
-  <link href="http://royhomer.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: 多线程 | 罗宏的个人技术博客]]></title>
+  <link href="http://royhomer.github.io/blog/categories/duo-xian-cheng/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
   <updated>2015-10-22T23:20:50+08:00</updated>
   <id>http://royhomer.github.io/</id>
@@ -98,16 +98,6 @@ void *run(void *data) {
 </code></pre>
 
 <p>}</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Octopress入门教程]]></title>
-    <link href="http://royhomer.github.io/blog/2015/10/22/%5B%3F%5D-chong-cheng-xu-de-bo-ke-fang-shi/"/>
-    <updated>2015-10-22T12:06:45+08:00</updated>
-    <id>http://royhomer.github.io/blog/2015/10/22/[?]-chong-cheng-xu-de-bo-ke-fang-shi</id>
-    <content type="html"><![CDATA[<!-- more -->
-
 ]]></content>
   </entry>
   
