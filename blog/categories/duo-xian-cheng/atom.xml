@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 多线程 | 罗宏的个人技术博客]]></title>
   <link href="http://royhomer.github.io/blog/categories/duo-xian-cheng/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-10-23T00:46:33+08:00</updated>
+  <updated>2015-10-23T00:59:20+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[royhomer]]></name>
@@ -21,9 +21,6 @@
     <content type="html"><![CDATA[<p>   在软件开发中必不可少的会接触到一个词语&ndash;多线程；</p>
 
 <p>   那么什么是多线呢，本文主要是对多线程的基础知识做简单讲解</p>
-
-<!-- more-->
-
 
 <hr />
 
@@ -76,7 +73,10 @@
 
 <h2>4.iOS中多线程的实现方案</h2>
 
-<p><img src="images/2015/10/duoxianchengjichu.png" alt="img" /></p>
+<p><img src="images/2015/10/duoxianchengjichu.png" alt="" /></p>
+
+<!-- more-->
+
 
 <h2>5.pthread的例子</h2>
 
@@ -98,6 +98,8 @@ void *run(void *data) {
     return nil;
 }
 </code></pre>
+
+<h2>6.NSThread的基本用法</h2>
 ]]></content>
   </entry>
   
