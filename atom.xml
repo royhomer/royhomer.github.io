@@ -4,7 +4,7 @@
   <title><![CDATA[Royhomer Octopress Blog]]></title>
   <link href="http://royhomer.github.io/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-10-22T16:15:59+08:00</updated>
+  <updated>2015-10-22T16:23:34+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[royhomer]]></name>
@@ -12,5 +12,29 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[第一篇博客]]></title>
+    <link href="http://royhomer.github.io/blog/2015/10/22/di-%5B%3F%5D-pian-bo-ke/"/>
+    <updated>2015-10-22T16:21:39+08:00</updated>
+    <id>http://royhomer.github.io/blog/2015/10/22/di-[?]-pian-bo-ke</id>
+    <content type="html"><![CDATA[<h1>测试一下</h1>
+
+<hr />
+
+<h1>第一</h1>
+
+<ul>
+<li>1</li>
+<li>2</li>
+<li>3</li>
+</ul>
+
+
+<hr />
+
+<h1>第二</h1>
+]]></content>
+  </entry>
   
 </feed>
