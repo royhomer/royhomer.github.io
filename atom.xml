@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Royhomer Octopress Blog]]></title>
+  <title><![CDATA[罗宏的个人技术博客]]></title>
   <link href="http://royhomer.github.io/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-10-22T17:16:46+08:00</updated>
+  <updated>2015-10-22T19:48:49+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[royhomer]]></name>
@@ -27,22 +27,7 @@
     <link href="http://royhomer.github.io/blog/2015/10/22/di-%5B%3F%5D-pian-bo-ke/"/>
     <updated>2015-10-22T16:21:39+08:00</updated>
     <id>http://royhomer.github.io/blog/2015/10/22/di-[?]-pian-bo-ke</id>
-    <content type="html"><![CDATA[<h1>测试一下</h1>
-
-<hr />
-
-<h1>第一</h1>
-
-<ul>
-<li>1</li>
-<li>2</li>
-<li>3</li>
-</ul>
-
-
-<hr />
-
-<h1>第二</h1>
+    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   
