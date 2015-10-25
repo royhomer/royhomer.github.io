@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>多线程基础3-NSOperation - 罗宏的个人技术博客</title>
+  <meta name="author" content="royhomer">
+
+  
+  <meta name="description" content="NSOperation和GCD很类似 NSOperation的作用 配合使用NSOperation 和 NSOperationQueue也能实现多线程编程 NSOperation和NSOperationQueue实现多线程的具体步骤 现将需要执行的操作封住到一个NSOperation对象中 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://royhomer.github.io/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="罗宏的个人技术博客" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!-- <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"> -->
+<script type="text/javascript">
+ function addBlankTargetForLinks () {
+   $('a[href^="http"]').each(function(){
+       $(this).attr('target', '_blank');
+   });
+ }
+ 
+ $(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+ });
+</script>
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">罗宏的个人技术博客</a></h1>
+  
+    <h2>一只coding的猴子的博客.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="royhomer.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">多线程基础3-NSOperation</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-25T20:56:07+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:56 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><blockquote><p>NSOperation和GCD很类似</p></blockquote>
+
+<!--more-->
+
+
+<h3>NSOperation的作用</h3>
+
+<ul>
+<li>配合使用NSOperation 和 NSOperationQueue也能实现多线程编程</li>
+</ul>
+
+
+<h3>NSOperation和NSOperationQueue实现多线程的具体步骤</h3>
+
+<ul>
+<li>现将需要执行的操作封住到一个NSOperation对象中</li>
+<li>然后将NSoperation对象添加到NSOperationQueue中</li>
+<li>系统会自动将NSOperationQueue中的NSOperation取出来</li>
+<li>然后将NSOperation中封装的操作放到一个线程中执行</li>
+</ul>
+
+
+<h3>NSOperation是一个操作类它的的子类才有封装操作的能力</h3>
+
+<ol>
+<li>NSInvocationOperation</li>
+<li>NSBlockOperation</li>
+<li>自定义继承NSOperation的子类</li>
+</ol>
+
+
+<p>创建NSOperation 前两种种方式其实作用一样 只是一个Block 一个target调用</p>
+
+<pre><code>NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(操作的方法) object:nil];
+
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+</code></pre>
+
+<h4>队列的类型</h4>
+
+<ol>
+<li>主队列
+
+<ul>
+<li>[NSOperationQueue mainQueue];</li>
+<li>添加到"主队列"中的操作,都会放到主线程中执行</li>
+</ul>
+</li>
+<li>非主队列
+
+<ul>
+<li>[[NSOperationQueue alloc] init];</li>
+<li>添加到"非主队列"中的操作,都会放到子线程中执行</li>
+</ul>
+</li>
+</ol>
+
+
+<h4>队列添加任务</h4>
+
+<ul>
+<li>-(void)addOperation:(NSOperation *)op;</li>
+<li>-(void)addOperationWithBlock:(void(^)(void))block;</li>
+</ul>
+
+
+<h5>上代码</h5>
+
+<p>情景一 、封装一个NSOperation操作, 直接调用start方法,</p>
+
+<p>分析: 主线程 &ndash; 同步执行 &ndash; 不开启子线程</p>
+
+<pre><code>NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+[operation start];
+</code></pre>
+
+<p>情景二 、封装一个NSOperation操作,往里添加多个block任务,</p>
+
+<p>分析1: 第一个操作 : 主线程 &ndash; 异步执行 &ndash; 不开启子线程</p>
+
+<p>分析2: 后添加的操作 : 子线程 &ndash; 异步执行 &ndash; 开启子线程</p>
+
+<pre><code>NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作A
+}];
+
+[operation addExecutionBlock:^{
+    // 要执行的任务或操作B
+}];
+
+[operation addExecutionBlock:^{
+    // 要执行的任务或操作C
+}];
+
+[operation start];   
+</code></pre>
+
+<p>操作A在主线程, 操作B、C在子线程</p>
+
+<p>情景三 、创建一个NSOperationQueue的队列 封装一个(或者多个)NSOperation操作</p>
+
+<p>分析: 子线程 &ndash; 异步执行 &ndash; 开启子线程</p>
+
+<pre><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+
+[queue addOperation:operation];
+</code></pre>
+
+<p>操作是在子线程异步执行</p>
+
+<pre><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+
+// 封装
+NSBlockOperation *operationA = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作A
+}];
+
+NSBlockOperation *operationB = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作B
+}];
+
+[queue addOperation:operationA];
+[queue addOperation:operationB];
+[queue addOperationWithBlock:^{
+   // 要执行的操作或任务C
+}];
+</code></pre>
+
+<p>操作A、B、C是在子线程异步执行的</p>
+
+<h4>常见的用法</h4>
+
+<ol>
+<li><p>设置最大并发数</p>
+
+<ul>
+<li>-(void)setMaxConcurrentOperationCount:(NSInteger)count;</li>
+<li>(NSInteger)maxConcurrentOperationCount;</li>
+</ul>
+</li>
+<li><p>队列其它操作</p>
+
+<ul>
+<li>取消所有操作 -(void)cancelAllOperations;</li>
+<li>暂停所有操作 [queue setSuspended:YES];</li>
+<li>恢复所有操作 [queue setSuspended:NO];</li>
+</ul>
+</li>
+</ol>
+
+
+<h4>操作之间的依赖</h4>
+
+<ul>
+<li>NSOperation之间可以设置依赖来保证执行顺序</li>
+<li>[operationB addDependency:operationA];  &mdash; <code>等操作A执行完毕后才能执行操作B</code> （不能相互依赖）</li>
+</ul>
+
+
+<h4>线程之间的通讯</h4>
+
+<pre><code>[queue addOperationWithBlock:^{
+   // 要执行耗时操作
+
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        // 回到主线程执行的操作
+    }];
+}];
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">royhomer</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-10-25T20:56:07+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:56 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/duo-xian-cheng/'>多线程</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/10/25/dan-li-mo-shi/" title="Previous Post: 单例模式">&laquo; 单例模式</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>文章分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/dan-li-mo-shi-xiang-guan/'>单例模式相关 (1)</a></li>
+<li class='category'><a href='/blog/categories/bo-ke-xiang-guan/'>博客相关 (1)</a></li>
+<li class='category'><a href='/blog/categories/duo-xian-cheng/'>多线程 (3)</a></li>
+
+  </ul>
+</section>
+<section>
+  <h1>最近的文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/">多线程基础3-NSOperation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/25/dan-li-mo-shi/">单例模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/2/">多线程基础02 GCD</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/22/di-%5B%3F%5D-pian-bo-ke/">多线程基础01 概念和NSTread</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/22/%5B%3F%5D-chong-cheng-xu-de-bo-ke-fang-shi/">Octopress入门教程</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - royhomer -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

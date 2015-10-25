@@ -4,7 +4,7 @@
   <title><![CDATA[罗宏的个人技术博客]]></title>
   <link href="http://royhomer.github.io/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-10-23T19:11:22+08:00</updated>
+  <updated>2015-10-25T23:40:26+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[royhomer]]></name>
@@ -12,6 +12,390 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[多线程基础3-NSOperation]]></title>
+    <link href="http://royhomer.github.io/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/"/>
+    <updated>2015-10-25T20:56:07+08:00</updated>
+    <id>http://royhomer.github.io/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation</id>
+    <content type="html"><![CDATA[<blockquote><p>NSOperation和GCD很类似</p></blockquote>
+
+<!--more-->
+
+
+<h3>NSOperation的作用</h3>
+
+<ul>
+<li>配合使用NSOperation 和 NSOperationQueue也能实现多线程编程</li>
+</ul>
+
+
+<h3>NSOperation和NSOperationQueue实现多线程的具体步骤</h3>
+
+<ul>
+<li>现将需要执行的操作封住到一个NSOperation对象中</li>
+<li>然后将NSoperation对象添加到NSOperationQueue中</li>
+<li>系统会自动将NSOperationQueue中的NSOperation取出来</li>
+<li>然后将NSOperation中封装的操作放到一个线程中执行</li>
+</ul>
+
+
+<h3>NSOperation是一个操作类它的的子类才有封装操作的能力</h3>
+
+<ol>
+<li>NSInvocationOperation</li>
+<li>NSBlockOperation</li>
+<li>自定义继承NSOperation的子类</li>
+</ol>
+
+
+<p>创建NSOperation 前两种种方式其实作用一样 只是一个Block 一个target调用</p>
+
+<pre><code>NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(操作的方法) object:nil];
+
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+</code></pre>
+
+<h4>队列的类型</h4>
+
+<ol>
+<li>主队列
+
+<ul>
+<li>[NSOperationQueue mainQueue];</li>
+<li>添加到"主队列"中的操作,都会放到主线程中执行</li>
+</ul>
+</li>
+<li>非主队列
+
+<ul>
+<li>[[NSOperationQueue alloc] init];</li>
+<li>添加到"非主队列"中的操作,都会放到子线程中执行</li>
+</ul>
+</li>
+</ol>
+
+
+<h4>队列添加任务</h4>
+
+<ul>
+<li>-(void)addOperation:(NSOperation *)op;</li>
+<li>-(void)addOperationWithBlock:(void(^)(void))block;</li>
+</ul>
+
+
+<h5>上代码</h5>
+
+<p>情景一 、封装一个NSOperation操作, 直接调用start方法,</p>
+
+<p>分析: 主线程 &ndash; 同步执行 &ndash; 不开启子线程</p>
+
+<pre><code>NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+[operation start];
+</code></pre>
+
+<p>情景二 、封装一个NSOperation操作,往里添加多个block任务,</p>
+
+<p>分析1: 第一个操作 : 主线程 &ndash; 异步执行 &ndash; 不开启子线程</p>
+
+<p>分析2: 后添加的操作 : 子线程 &ndash; 异步执行 &ndash; 开启子线程</p>
+
+<pre><code>NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作A
+}];
+
+[operation addExecutionBlock:^{
+    // 要执行的任务或操作B
+}];
+
+[operation addExecutionBlock:^{
+    // 要执行的任务或操作C
+}];
+
+[operation start];   
+</code></pre>
+
+<p>操作A在主线程, 操作B、C在子线程</p>
+
+<p>情景三 、创建一个NSOperationQueue的队列 封装一个(或者多个)NSOperation操作</p>
+
+<p>分析: 子线程 &ndash; 异步执行 &ndash; 开启子线程</p>
+
+<pre><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+
+[queue addOperation:operation];
+</code></pre>
+
+<p>操作是在子线程异步执行</p>
+
+<pre><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+
+// 封装
+NSBlockOperation *operationA = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作A
+}];
+
+NSBlockOperation *operationB = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作B
+}];
+
+[queue addOperation:operationA];
+[queue addOperation:operationB];
+[queue addOperationWithBlock:^{
+   // 要执行的操作或任务C
+}];
+</code></pre>
+
+<p>操作A、B、C是在子线程异步执行的</p>
+
+<h4>常见的用法</h4>
+
+<ol>
+<li><p>设置最大并发数</p>
+
+<ul>
+<li>-(void)setMaxConcurrentOperationCount:(NSInteger)count;</li>
+<li>(NSInteger)maxConcurrentOperationCount;</li>
+</ul>
+</li>
+<li><p>队列其它操作</p>
+
+<ul>
+<li>取消所有操作 -(void)cancelAllOperations;</li>
+<li>暂停所有操作 [queue setSuspended:YES];</li>
+<li>恢复所有操作 [queue setSuspended:NO];</li>
+</ul>
+</li>
+</ol>
+
+
+<h4>操作之间的依赖</h4>
+
+<ul>
+<li>NSOperation之间可以设置依赖来保证执行顺序</li>
+<li>[operationB addDependency:operationA];  &mdash; <code>等操作A执行完毕后才能执行操作B</code> （不能相互依赖）</li>
+</ul>
+
+
+<h4>线程之间的通讯</h4>
+
+<pre><code>[queue addOperationWithBlock:^{
+   // 要执行耗时操作
+
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        // 回到主线程执行的操作
+    }];
+}];
+</code></pre>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[单例模式]]></title>
+    <link href="http://royhomer.github.io/blog/2015/10/25/dan-li-mo-shi/"/>
+    <updated>2015-10-25T19:13:20+08:00</updated>
+    <id>http://royhomer.github.io/blog/2015/10/25/dan-li-mo-shi</id>
+    <content type="html"><![CDATA[<blockquote><p>数学与逻辑学中，singleton定义为“有且仅有一个元素的集合”。
+单例模式最初的定义出现于《设计模式》（艾迪生维斯理, 1994）：“保证一个类仅有一个实例，并提供一个访问它的全局访问点。”</p></blockquote>
+
+<!--more-->
+
+
+<h3>写在前面的话</h3>
+
+<p>一开始我并不了解单例模式的应用场景。只是知道有这么一种设计模式，怎么去实现它。但是随着使用频率的上升。您就能体会到单例模式的好处，简单的说&mdash;-单例模式就是保证这个单例类的实例化的对象只有一份，不管怎么多次实例化对象，他得对象都是同一个。</p>
+
+<h3>一步步实现iOS中单例的写法</h3>
+
+<p>1 集成NSObject 实现一个单例类, 实现一个类方法。让这个方法返回的实例唯一。</p>
+
+<pre><code>// 定义一个实例对象
+id _mySingleton;
+
++ (instancetype)shareSingleton {
+    // 如果不为空直接返回
+    if (_mySingleton == nil) {
+    _mySingleton = [[self alloc] init];
+    }
+    return _mySingleton;
+}
+</code></pre>
+
+<p>如下图所示 : 不论调用多少次内存地址都一样。保证单例类的对象的唯一</p>
+
+<p><img src="images/danlimoshidayin1.png" alt="" /></p>
+
+<p>2 我们还得考虑多个线程 同时实例化的时候 所以需要加线程锁 且在最外面加一层判断</p>
+
+<pre><code>// 定义一个实例对象
+id _mySingleton;
+
++ (instancetype)shareSingleton {
+
+    if (_mySingleton == nil) {// 防止多线程重复加锁
+        @synchronized(self) { // 加线程锁
+            if (_mySingleton == nil) { // 防止重复实例化
+             _mySingleton = [[self alloc] init];
+            }
+        }
+    }
+return _mySingleton;
+}
+</code></pre>
+
+<p>3 为了保证 全局对象 _mySingleton的唯一性 加static修饰</p>
+
+<pre><code>// static 修饰全局变量 全局变量的作用域只在当前类
+static id _mySingleton;
+</code></pre>
+
+<p>4 但是当使用copy 或 alloc 实例化对象的时候就会发生对象地址改变，实例化对象不唯一现象，解决办法就是重写allocWithZone 和 copyWithZone<code>注意这里必须要实现&lt;NSCopying&gt;协议才能打出来</code> 一下就是完整版的单例类实现</p>
+
+<pre><code>// 定义一个实例对象
+static id _mySingleton;
++ (instancetype)shareSingleton {
+
+    if (_mySingleton == nil) {// 防止多线程重复加锁
+        @synchronized(self) { // 加线程锁
+            if (_mySingleton == nil) { // 防止重复实例化
+                _mySingleton = [[self alloc] init];
+            }
+        }
+     }
+return _mySingleton;
+}
+
+// 重写allocWithZone 调用父类的方法
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    if (_mySingleton == nil) {
+        @synchronized(self) {
+            if (_mySingleton == nil) {
+                _mySingleton = [super allocWithZone:zone];
+            }
+        }
+    }
+    return _mySingleton;
+}
+// 重写copyWithZone
+- (id)copyWithZone:(NSZone *)zone {
+    return _mySingleton;
+}
+</code></pre>
+
+<h3>懒汉式单例和饿汉式单例&ndash; 推荐大家使用懒汉式</h3>
+
+<p>上面我们提到这种实现方式就是懒汉式 用到的时候加载</p>
+
+<p>饿汉式实现方式主要思路是程序加载到内存时候进行创建</p>
+
+<pre><code>// 定义一个实例对象
+static id _mySingleton;
+
++ (void)load {
+    _mySingleton = [[self alloc] init];
+}
+
++ (instancetype)shareSingleton {
+    return _mySingleton;
+}
+
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    if (_mySingleton == nil) {
+        _mySingleton = [super allocWithZone:zone];
+    }
+    return _mySingleton;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    return _mySingleton;
+}
+</code></pre>
+
+<h3>MRC实现单例的时候防止对象被释放重写一下三个方法</h3>
+
+<pre><code>- (oneway void)release {
+// 什么也不写
+}
+
+- (id)retain {
+    return self;
+}   
+
+- (NSUInteger)retainCount {
+    return 1;
+}
+</code></pre>
+
+<h3>用GCD得方式实现单例类</h3>
+
+<pre><code>// 定义一个实例对象
+static id _mySingleton;
++ (instancetype)shareSingleton {
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        _mySingleton = [[self alloc] init];
+    });
+
+return _mySingleton;
+}
+
+// 重写allocWithZone 调用父类的方法
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        _mySingleton = [super allocWithZone:zone];
+    });
+
+    return _mySingleton;
+}
+
+// 重写copyWithZone
+- (id)copyWithZone:(NSZone *)zone {
+    return _mySingleton;
+}
+</code></pre>
+
+<h3>用宏实现快捷单例类</h3>
+
+<pre><code>#define Single(name) \
+\
+static id _my##name;\
++ (instancetype)share##name {\
+\
+    static dispatch_once_t onceToken;\
+    dispatch_once(&amp;onceToken, ^{\
+        _my##name = [[self alloc] init];\
+    });\
+\
+    return _my##name;\
+}\
+\
++ (instancetype)allocWithZone:(struct _NSZone *)zone {\
+\
+    static dispatch_once_t onceToken;\
+    dispatch_once(&amp;onceToken, ^{\
+        _my##name = [super allocWithZone:zone];\
+    });\
+    \
+    return _my##name;\
+}\
+\
+- (id)copyWithZone:(NSZone *)zone {\
+    return _my##name;\
+}
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[多线程基础02 GCD]]></title>
@@ -25,6 +409,8 @@
 <hr />
 
 <blockquote><p>CGD的优势: 多核并行运算提出解决方案，自动管理线程生命周期，自动利用更多的CPU内核</p></blockquote>
+
+<p>  <!--more--></p>
 
 <h3>1 两大核心概念</h3>
 
@@ -183,9 +569,35 @@ dispatch_queue_t queue = dispatch_get_main_queue();
 
 <h3>7 一次执行</h3>
 
+<p>一次性执行的代码主要用来创建单例模式</p>
+
 <pre><code>static dispatch_once_t onceToken;
 dispatch_once(&amp;onceToken, ^{
     // 只执行一次的代码
+});
+</code></pre>
+
+<h3>8 队列组</h3>
+
+<p>队列组的功能主要是，当多个任务需要同时执行，且所有任务都执行完毕后，还要触发执行别的任务的时候用到。</p>
+
+<pre><code>//获取队列组
+dispatch_group_t group = dispatch_group_create();
+
+//队列组添加异步执行任务
+dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+dispatch_group_async(group, queue, ^{
+   // 任务1代码 
+});
+.
+添加多个任务
+.
+dispatch_group_async(group, queue, ^{
+   // 任务n代码 
+});
+.
+dispatch_group_notify(group, queue, ^{
+    // 所有任务执行完后唤醒需要执行的代码        
 });
 </code></pre>
 ]]></content>

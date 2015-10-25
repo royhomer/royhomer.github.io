@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 多线程 | 罗宏的个人技术博客]]></title>
   <link href="http://royhomer.github.io/blog/categories/duo-xian-cheng/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-10-23T19:11:22+08:00</updated>
+  <updated>2015-10-25T23:40:26+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[royhomer]]></name>
@@ -12,6 +12,191 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[多线程基础3-NSOperation]]></title>
+    <link href="http://royhomer.github.io/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/"/>
+    <updated>2015-10-25T20:56:07+08:00</updated>
+    <id>http://royhomer.github.io/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation</id>
+    <content type="html"><![CDATA[<blockquote><p>NSOperation和GCD很类似</p></blockquote>
+
+<!--more-->
+
+
+<h3>NSOperation的作用</h3>
+
+<ul>
+<li>配合使用NSOperation 和 NSOperationQueue也能实现多线程编程</li>
+</ul>
+
+
+<h3>NSOperation和NSOperationQueue实现多线程的具体步骤</h3>
+
+<ul>
+<li>现将需要执行的操作封住到一个NSOperation对象中</li>
+<li>然后将NSoperation对象添加到NSOperationQueue中</li>
+<li>系统会自动将NSOperationQueue中的NSOperation取出来</li>
+<li>然后将NSOperation中封装的操作放到一个线程中执行</li>
+</ul>
+
+
+<h3>NSOperation是一个操作类它的的子类才有封装操作的能力</h3>
+
+<ol>
+<li>NSInvocationOperation</li>
+<li>NSBlockOperation</li>
+<li>自定义继承NSOperation的子类</li>
+</ol>
+
+
+<p>创建NSOperation 前两种种方式其实作用一样 只是一个Block 一个target调用</p>
+
+<pre><code>NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(操作的方法) object:nil];
+
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+</code></pre>
+
+<h4>队列的类型</h4>
+
+<ol>
+<li>主队列
+
+<ul>
+<li>[NSOperationQueue mainQueue];</li>
+<li>添加到"主队列"中的操作,都会放到主线程中执行</li>
+</ul>
+</li>
+<li>非主队列
+
+<ul>
+<li>[[NSOperationQueue alloc] init];</li>
+<li>添加到"非主队列"中的操作,都会放到子线程中执行</li>
+</ul>
+</li>
+</ol>
+
+
+<h4>队列添加任务</h4>
+
+<ul>
+<li>-(void)addOperation:(NSOperation *)op;</li>
+<li>-(void)addOperationWithBlock:(void(^)(void))block;</li>
+</ul>
+
+
+<h5>上代码</h5>
+
+<p>情景一 、封装一个NSOperation操作, 直接调用start方法,</p>
+
+<p>分析: 主线程 &ndash; 同步执行 &ndash; 不开启子线程</p>
+
+<pre><code>NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+[operation start];
+</code></pre>
+
+<p>情景二 、封装一个NSOperation操作,往里添加多个block任务,</p>
+
+<p>分析1: 第一个操作 : 主线程 &ndash; 异步执行 &ndash; 不开启子线程</p>
+
+<p>分析2: 后添加的操作 : 子线程 &ndash; 异步执行 &ndash; 开启子线程</p>
+
+<pre><code>NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作A
+}];
+
+[operation addExecutionBlock:^{
+    // 要执行的任务或操作B
+}];
+
+[operation addExecutionBlock:^{
+    // 要执行的任务或操作C
+}];
+
+[operation start];   
+</code></pre>
+
+<p>操作A在主线程, 操作B、C在子线程</p>
+
+<p>情景三 、创建一个NSOperationQueue的队列 封装一个(或者多个)NSOperation操作</p>
+
+<p>分析: 子线程 &ndash; 异步执行 &ndash; 开启子线程</p>
+
+<pre><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作
+}];
+
+[queue addOperation:operation];
+</code></pre>
+
+<p>操作是在子线程异步执行</p>
+
+<pre><code>NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+
+// 封装
+NSBlockOperation *operationA = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作A
+}];
+
+NSBlockOperation *operationB = [NSBlockOperation blockOperationWithBlock:^{
+    // 要执行的任务或操作B
+}];
+
+[queue addOperation:operationA];
+[queue addOperation:operationB];
+[queue addOperationWithBlock:^{
+   // 要执行的操作或任务C
+}];
+</code></pre>
+
+<p>操作A、B、C是在子线程异步执行的</p>
+
+<h4>常见的用法</h4>
+
+<ol>
+<li><p>设置最大并发数</p>
+
+<ul>
+<li>-(void)setMaxConcurrentOperationCount:(NSInteger)count;</li>
+<li>(NSInteger)maxConcurrentOperationCount;</li>
+</ul>
+</li>
+<li><p>队列其它操作</p>
+
+<ul>
+<li>取消所有操作 -(void)cancelAllOperations;</li>
+<li>暂停所有操作 [queue setSuspended:YES];</li>
+<li>恢复所有操作 [queue setSuspended:NO];</li>
+</ul>
+</li>
+</ol>
+
+
+<h4>操作之间的依赖</h4>
+
+<ul>
+<li>NSOperation之间可以设置依赖来保证执行顺序</li>
+<li>[operationB addDependency:operationA];  &mdash; <code>等操作A执行完毕后才能执行操作B</code> （不能相互依赖）</li>
+</ul>
+
+
+<h4>线程之间的通讯</h4>
+
+<pre><code>[queue addOperationWithBlock:^{
+   // 要执行耗时操作
+
+    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        // 回到主线程执行的操作
+    }];
+}];
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[多线程基础02 GCD]]></title>
@@ -25,6 +210,8 @@
 <hr />
 
 <blockquote><p>CGD的优势: 多核并行运算提出解决方案，自动管理线程生命周期，自动利用更多的CPU内核</p></blockquote>
+
+<p>  <!--more--></p>
 
 <h3>1 两大核心概念</h3>
 
@@ -183,9 +370,35 @@ dispatch_queue_t queue = dispatch_get_main_queue();
 
 <h3>7 一次执行</h3>
 
+<p>一次性执行的代码主要用来创建单例模式</p>
+
 <pre><code>static dispatch_once_t onceToken;
 dispatch_once(&amp;onceToken, ^{
     // 只执行一次的代码
+});
+</code></pre>
+
+<h3>8 队列组</h3>
+
+<p>队列组的功能主要是，当多个任务需要同时执行，且所有任务都执行完毕后，还要触发执行别的任务的时候用到。</p>
+
+<pre><code>//获取队列组
+dispatch_group_t group = dispatch_group_create();
+
+//队列组添加异步执行任务
+dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+dispatch_group_async(group, queue, ^{
+   // 任务1代码 
+});
+.
+添加多个任务
+.
+dispatch_group_async(group, queue, ^{
+   // 任务n代码 
+});
+.
+dispatch_group_notify(group, queue, ^{
+    // 所有任务执行完后唤醒需要执行的代码        
 });
 </code></pre>
 ]]></content>

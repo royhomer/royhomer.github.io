@@ -1,0 +1,404 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>单例模式 - 罗宏的个人技术博客</title>
+  <meta name="author" content="royhomer">
+
+  
+  <meta name="description" content="数学与逻辑学中，singleton定义为“有且仅有一个元素的集合”。
+单例模式最初的定义出现于《设计模式》（艾迪生维斯理, 1994）：“保证一个类仅有一个实例，并提供一个访问它的全局访问点。” 写在前面的话 一开始我并不了解单例模式的应用场景。只是知道有这么一种设计模式，怎么去实现它。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://royhomer.github.io/blog/2015/10/25/dan-li-mo-shi/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="罗宏的个人技术博客" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!-- <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"> -->
+<script type="text/javascript">
+ function addBlankTargetForLinks () {
+   $('a[href^="http"]').each(function(){
+       $(this).attr('target', '_blank');
+   });
+ }
+ 
+ $(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+ });
+</script>
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">罗宏的个人技术博客</a></h1>
+  
+    <h2>一只coding的猴子的博客.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="royhomer.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">单例模式</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-25T19:13:20+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:13 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><blockquote><p>数学与逻辑学中，singleton定义为“有且仅有一个元素的集合”。
+单例模式最初的定义出现于《设计模式》（艾迪生维斯理, 1994）：“保证一个类仅有一个实例，并提供一个访问它的全局访问点。”</p></blockquote>
+
+<!--more-->
+
+
+<h3>写在前面的话</h3>
+
+<p>一开始我并不了解单例模式的应用场景。只是知道有这么一种设计模式，怎么去实现它。但是随着使用频率的上升。您就能体会到单例模式的好处，简单的说&mdash;-单例模式就是保证这个单例类的实例化的对象只有一份，不管怎么多次实例化对象，他得对象都是同一个。</p>
+
+<h3>一步步实现iOS中单例的写法</h3>
+
+<p>1 集成NSObject 实现一个单例类, 实现一个类方法。让这个方法返回的实例唯一。</p>
+
+<pre><code>// 定义一个实例对象
+id _mySingleton;
+
++ (instancetype)shareSingleton {
+    // 如果不为空直接返回
+    if (_mySingleton == nil) {
+    _mySingleton = [[self alloc] init];
+    }
+    return _mySingleton;
+}
+</code></pre>
+
+<p>如下图所示 : 不论调用多少次内存地址都一样。保证单例类的对象的唯一</p>
+
+<p><img src="images/danlimoshidayin1.png" alt="" /></p>
+
+<p>2 我们还得考虑多个线程 同时实例化的时候 所以需要加线程锁 且在最外面加一层判断</p>
+
+<pre><code>// 定义一个实例对象
+id _mySingleton;
+
++ (instancetype)shareSingleton {
+
+    if (_mySingleton == nil) {// 防止多线程重复加锁
+        @synchronized(self) { // 加线程锁
+            if (_mySingleton == nil) { // 防止重复实例化
+             _mySingleton = [[self alloc] init];
+            }
+        }
+    }
+return _mySingleton;
+}
+</code></pre>
+
+<p>3 为了保证 全局对象 _mySingleton的唯一性 加static修饰</p>
+
+<pre><code>// static 修饰全局变量 全局变量的作用域只在当前类
+static id _mySingleton;
+</code></pre>
+
+<p>4 但是当使用copy 或 alloc 实例化对象的时候就会发生对象地址改变，实例化对象不唯一现象，解决办法就是重写allocWithZone 和 copyWithZone<code>注意这里必须要实现&lt;NSCopying&gt;协议才能打出来</code> 一下就是完整版的单例类实现</p>
+
+<pre><code>// 定义一个实例对象
+static id _mySingleton;
++ (instancetype)shareSingleton {
+
+    if (_mySingleton == nil) {// 防止多线程重复加锁
+        @synchronized(self) { // 加线程锁
+            if (_mySingleton == nil) { // 防止重复实例化
+                _mySingleton = [[self alloc] init];
+            }
+        }
+     }
+return _mySingleton;
+}
+
+// 重写allocWithZone 调用父类的方法
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    if (_mySingleton == nil) {
+        @synchronized(self) {
+            if (_mySingleton == nil) {
+                _mySingleton = [super allocWithZone:zone];
+            }
+        }
+    }
+    return _mySingleton;
+}
+// 重写copyWithZone
+- (id)copyWithZone:(NSZone *)zone {
+    return _mySingleton;
+}
+</code></pre>
+
+<h3>懒汉式单例和饿汉式单例&ndash; 推荐大家使用懒汉式</h3>
+
+<p>上面我们提到这种实现方式就是懒汉式 用到的时候加载</p>
+
+<p>饿汉式实现方式主要思路是程序加载到内存时候进行创建</p>
+
+<pre><code>// 定义一个实例对象
+static id _mySingleton;
+
++ (void)load {
+    _mySingleton = [[self alloc] init];
+}
+
++ (instancetype)shareSingleton {
+    return _mySingleton;
+}
+
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+    if (_mySingleton == nil) {
+        _mySingleton = [super allocWithZone:zone];
+    }
+    return _mySingleton;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    return _mySingleton;
+}
+</code></pre>
+
+<h3>MRC实现单例的时候防止对象被释放重写一下三个方法</h3>
+
+<pre><code>- (oneway void)release {
+// 什么也不写
+}
+
+- (id)retain {
+    return self;
+}   
+
+- (NSUInteger)retainCount {
+    return 1;
+}
+</code></pre>
+
+<h3>用GCD得方式实现单例类</h3>
+
+<pre><code>// 定义一个实例对象
+static id _mySingleton;
++ (instancetype)shareSingleton {
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        _mySingleton = [[self alloc] init];
+    });
+
+return _mySingleton;
+}
+
+// 重写allocWithZone 调用父类的方法
++ (instancetype)allocWithZone:(struct _NSZone *)zone {
+
+    static dispatch_once_t onceToken;
+    dispatch_once(&amp;onceToken, ^{
+        _mySingleton = [super allocWithZone:zone];
+    });
+
+    return _mySingleton;
+}
+
+// 重写copyWithZone
+- (id)copyWithZone:(NSZone *)zone {
+    return _mySingleton;
+}
+</code></pre>
+
+<h3>用宏实现快捷单例类</h3>
+
+<pre><code>#define Single(name) \
+\
+static id _my##name;\
++ (instancetype)share##name {\
+\
+    static dispatch_once_t onceToken;\
+    dispatch_once(&amp;onceToken, ^{\
+        _my##name = [[self alloc] init];\
+    });\
+\
+    return _my##name;\
+}\
+\
++ (instancetype)allocWithZone:(struct _NSZone *)zone {\
+\
+    static dispatch_once_t onceToken;\
+    dispatch_once(&amp;onceToken, ^{\
+        _my##name = [super allocWithZone:zone];\
+    });\
+    \
+    return _my##name;\
+}\
+\
+- (id)copyWithZone:(NSZone *)zone {\
+    return _my##name;\
+}
+</code></pre>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">royhomer</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-10-25T19:13:20+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:13 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/dan-li-mo-shi-xiang-guan/'>单例模式相关</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/10/23/2/" title="Previous Post: 多线程基础02 GCD">&laquo; 多线程基础02 GCD</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/" title="Next Post: 多线程基础3-NSOperation">多线程基础3-NSOperation &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>文章分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/dan-li-mo-shi-xiang-guan/'>单例模式相关 (1)</a></li>
+<li class='category'><a href='/blog/categories/bo-ke-xiang-guan/'>博客相关 (1)</a></li>
+<li class='category'><a href='/blog/categories/duo-xian-cheng/'>多线程 (3)</a></li>
+
+  </ul>
+</section>
+<section>
+  <h1>最近的文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/">多线程基础3-NSOperation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/25/dan-li-mo-shi/">单例模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/23/2/">多线程基础02 GCD</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/22/di-%5B%3F%5D-pian-bo-ke/">多线程基础01 概念和NSTread</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/22/%5B%3F%5D-chong-cheng-xu-de-bo-ke-fang-shi/">Octopress入门教程</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - royhomer -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

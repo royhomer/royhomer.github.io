@@ -9,7 +9,7 @@
   <meta name="author" content="royhomer">
 
   
-  <meta name="description" content="了解完多线基础概念和NSTread的基本使用后，本文介绍GCD的主要用方法 GCD全称 : Grand Central Dispatch &ndash; 伟大的中枢调度器 CGD的优势: 多核并行运算提出解决方案，自动管理线程生命周期，自动利用更多的CPU内核 1 两大核心概念 任务 : &hellip;">
+  <meta name="description" content="NSOperation和GCD很类似 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,75 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/">多线程基础3-NSOperation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-25T20:56:07+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>8:56 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>NSOperation和GCD很类似</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/">阅读更多 → &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/10/25/dan-li-mo-shi/">单例模式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-25T19:13:20+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>25</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>7:13 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>数学与逻辑学中，singleton定义为“有且仅有一个元素的集合”。
+单例模式最初的定义出现于《设计模式》（艾迪生维斯理, 1994）：“保证一个类仅有一个实例，并提供一个访问它的全局访问点。”</p></blockquote>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/10/25/dan-li-mo-shi/">阅读更多 → &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2015/10/23/2/">多线程基础02 GCD</a></h1>
     
     
@@ -106,170 +175,12 @@
 
 <blockquote><p>CGD的优势: 多核并行运算提出解决方案，自动管理线程生命周期，自动利用更多的CPU内核</p></blockquote>
 
-<h3>1 两大核心概念</h3>
-
-<ul>
-<li>任务 : 执行什么操作</li>
-<li><p>队列 : 用来存放任务</p></li>
-<li><p>一般使用步骤: 定制任务，将任务添加到队列，GCD会自动将队列中得任务取出，放到对应的线程中执行;任务取出顺序，遵循FIFO，先进先出，后进后出，</p></li>
-</ul>
-
-
-<h3>2 用来执行任务的两个函数</h3>
-
-<p>同步执行</p>
-
-<pre><code>dispatch_sync(dispatch_queue_t queue, ^(void)block)
-</code></pre>
-
-<p>异步执行</p>
-
-<pre><code>dispatch_async(dispatch_queue_t queue, ^(void)block)
-* 参数 queue 队列
-* 参数 block 任务的代码块
-</code></pre>
-
-<ul>
-<li>两者的区别
-
-<ul>
-<li>同步 : 不开启新线程</li>
-<li>异步 : 会开启新线程</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>3 队列的类型</h3>
-
-<h4>GCD的队列分为两大类型</h4>
-
-<p>并发队列 (Concurrent Dispatch Queue) : <code>多个任务并发（同时）执行</code> (自动开启多个线程同时执行),只有在异步函数下有效</p>
-
-<pre><code>dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-</code></pre>
-
-<p>  参数1 : 队列优先级<br/>
-  参数2 : 默认 0</p>
-
-<p>串行队列 (Serial Dispatch Queue) : 一个任务执行完成再接着执行下一个</p>
-
-<pre><code>dispatch_queue_t queue = dispatch_queue_create("C语言的字符串-队列标识", NULL);
-</code></pre>
-
-<h3>4 四种情况分析</h3>
-
-<h5>1. 异步执行 全局并发队列 添加5个任务</h5>
-
-<ul>
-<li>分析 <code>常用这种方式</code>
-
-<ul>
-<li>会不会创建线程 : 会创建5条子线程</li>
-<li>任务的执行方式 : 并发执行</li>
-</ul>
-</li>
-</ul>
-
-
-<h5>2. 异步执行 串行队列 添加5个任务</h5>
-
-<ul>
-<li>分析 <code>偶尔常用这种方式</code>
-
-<ul>
-<li>会不会创建线程 : 会创建1条子线程（不论添加多少个任务都只开启一条）</li>
-<li>任务的执行方式 : 顺序执行</li>
-</ul>
-</li>
-</ul>
-
-
-<h5>3. 同步执行 全局并发队列 添加5个任务</h5>
-
-<ul>
-<li>分析 <code>不常用</code>
-
-<ul>
-<li>会不会创建线程 : 不会开启新的子线程</li>
-<li>任务的执行方式 : 顺序执行，（因为只有一条线程所以只能顺序执行）</li>
-</ul>
-</li>
-</ul>
-
-
-<h5>4. 同步执行 串行队列 添加5个任务</h5>
-
-<ul>
-<li>分析 <code>不常用</code>
-
-<ul>
-<li>会不会创建线程 : 不会开启新的子线程</li>
-<li>任务的执行方式 : 顺序执行</li>
-</ul>
-</li>
-</ul>
-
-
-<h5>5. 特殊情况 &ndash; 异步执行 串行主队列 添加5个任务</h5>
-
-<pre><code>// 获取主队列  这个也是一个串行队列
-dispatch_queue_t queue = dispatch_get_main_queue();
-</code></pre>
-
-<ul>
-<li>分析
-
-<ul>
-<li>会不会创建线程 : 不会开启新的线程 因为主队列对应的线程就是主线程,主线程只能有一个</li>
-<li>任务的执行方式 : 顺序执行</li>
-</ul>
-</li>
-</ul>
-
-
-<h3>5 GCD线程之间的通信</h3>
-
-<pre><code>dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-
-    // 耗时操作
-
-    dispatch_async(dispatch_get_main_queue(), ^{
-
-        // 主线程刷新UI
-
-    });
-});
-</code></pre>
-
-<h3>6 延迟执行</h3>
-
-<p>1 下面这种方式会卡住主线程</p>
-
-<pre><code>[NSThread sleepForTimeInterval:2];
-</code></pre>
-
-<p>2 下面这种方式不会卡住主线程,但是不能改变延迟后代码执行的线程</p>
-
-<pre><code>[self performSelector:@selector(download:) withObject:@"下载中" afterDelay:2];```
-</code></pre>
-
-<p>3 这种GCD的方式，比较好，不卡住主线程，也能随意定制延迟后代码执行的线程</p>
-
-<pre><code>dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(“时间” * NSEC_PER_SEC)), dispatch_get_main_queue()(这个队列可以改成全局队列), ^{
-    // 延迟后要执行的代码
-    });
-</code></pre>
-
-<h3>7 一次执行</h3>
-
-<pre><code>static dispatch_once_t onceToken;
-dispatch_once(&amp;onceToken, ^{
-    // 只执行一次的代码
-});
-</code></pre>
-</div>
+<p>  </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/10/23/2/">阅读更多 → &rarr;</a>
+    </footer>
   
 
 
@@ -354,14 +265,23 @@ dispatch_once(&amp;onceToken, ^{
     <section>
   <h1>文章分类</h1>
   <ul id="categories">
-    <li class='category'><a href='/blog/categories/博客相关/'>博客相关 (1)</a></li>
-<li class='category'><a href='/blog/categories/多线程/'>多线程 (2)</a></li>
+    <li class='category'><a href='/blog/categories/dan-li-mo-shi-xiang-guan/'>单例模式相关 (1)</a></li>
+<li class='category'><a href='/blog/categories/bo-ke-xiang-guan/'>博客相关 (1)</a></li>
+<li class='category'><a href='/blog/categories/duo-xian-cheng/'>多线程 (3)</a></li>
 
   </ul>
 </section>
 <section>
   <h1>最近的文章</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/">多线程基础3-NSOperation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/10/25/dan-li-mo-shi/">单例模式</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2015/10/23/2/">多线程基础02 GCD</a>
