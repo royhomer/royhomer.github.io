@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://royhomer.github.io/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/</loc>
-    <lastmod>2015-10-25T20:56:07+08:00</lastmod>
+    <loc>http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-3-nsoperation/</loc>
+    <lastmod>2014-10-22T20:56:07+08:00</lastmod>
   </url>
   <url>
-    <loc>http://royhomer.github.io/blog/2015/10/25/dan-li-mo-shi/</loc>
-    <lastmod>2015-10-25T19:13:20+08:00</lastmod>
+    <loc>http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-2-gcd/</loc>
+    <lastmod>2014-10-22T20:53:07+08:00</lastmod>
   </url>
   <url>
-    <loc>http://royhomer.github.io/blog/2015/10/23/2/</loc>
-    <lastmod>2015-10-23T13:53:07+08:00</lastmod>
+    <loc>http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-1-gai-nian-he-nsthread/</loc>
+    <lastmod>2014-10-22T20:21:39+08:00</lastmod>
   </url>
   <url>
-    <loc>http://royhomer.github.io/blog/2015/10/22/di-%5B%3F%5D-pian-bo-ke/</loc>
-    <lastmod>2015-10-22T16:21:39+08:00</lastmod>
-  </url>
-  <url>
-    <loc>http://royhomer.github.io/blog/2015/10/22/%5B%3F%5D-chong-cheng-xu-de-bo-ke-fang-shi/</loc>
-    <lastmod>2015-10-22T12:06:45+08:00</lastmod>
+    <loc>http://royhomer.github.io/blog/2014/10/21/dan-li-mo-shi/</loc>
+    <lastmod>2014-10-21T19:13:20+08:00</lastmod>
   </url>
   <url>
     <loc>http://royhomer.github.io/blog/archives/</loc>
@@ -30,12 +26,9 @@
     <loc>http://royhomer.github.io/about/</loc>
   </url>
   <url>
-    <loc>http://royhomer.github.io/blog/categories/bo-ke-xiang-guan/</loc>
+    <loc>http://royhomer.github.io/blog/categories/dan-li-mo-shi-xiang-guan/</loc>
   </url>
   <url>
     <loc>http://royhomer.github.io/blog/categories/duo-xian-cheng/</loc>
-  </url>
-  <url>
-    <loc>http://royhomer.github.io/blog/categories/dan-li-mo-shi-xiang-guan/</loc>
   </url>
 </urlset>

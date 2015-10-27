@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 单例模式相关 | 罗宏的个人技术博客]]></title>
   <link href="http://royhomer.github.io/blog/categories/dan-li-mo-shi-xiang-guan/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-10-25T23:40:26+08:00</updated>
+  <updated>2015-10-27T10:49:17+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[royhomer]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[单例模式]]></title>
-    <link href="http://royhomer.github.io/blog/2015/10/25/dan-li-mo-shi/"/>
-    <updated>2015-10-25T19:13:20+08:00</updated>
-    <id>http://royhomer.github.io/blog/2015/10/25/dan-li-mo-shi</id>
+    <link href="http://royhomer.github.io/blog/2014/10/21/dan-li-mo-shi/"/>
+    <updated>2014-10-21T19:13:20+08:00</updated>
+    <id>http://royhomer.github.io/blog/2014/10/21/dan-li-mo-shi</id>
     <content type="html"><![CDATA[<blockquote><p>数学与逻辑学中，singleton定义为“有且仅有一个元素的集合”。
 单例模式最初的定义出现于《设计模式》（艾迪生维斯理, 1994）：“保证一个类仅有一个实例，并提供一个访问它的全局访问点。”</p></blockquote>
 

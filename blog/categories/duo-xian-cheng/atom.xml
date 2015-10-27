@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 多线程 | 罗宏的个人技术博客]]></title>
   <link href="http://royhomer.github.io/blog/categories/duo-xian-cheng/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-10-25T23:40:26+08:00</updated>
+  <updated>2015-10-27T10:49:17+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[royhomer]]></name>
@@ -14,10 +14,10 @@
 
   
   <entry>
-    <title type="html"><![CDATA[多线程基础3-NSOperation]]></title>
-    <link href="http://royhomer.github.io/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation/"/>
-    <updated>2015-10-25T20:56:07+08:00</updated>
-    <id>http://royhomer.github.io/blog/2015/10/25/duo-xian-cheng-ji-chu-3-nsoperation</id>
+    <title type="html"><![CDATA[多线程基础03 NSOperation]]></title>
+    <link href="http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-3-nsoperation/"/>
+    <updated>2014-10-22T20:56:07+08:00</updated>
+    <id>http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-3-nsoperation</id>
     <content type="html"><![CDATA[<blockquote><p>NSOperation和GCD很类似</p></blockquote>
 
 <!--more-->
@@ -200,9 +200,9 @@ NSBlockOperation *operationB = [NSBlockOperation blockOperationWithBlock:^{
   
   <entry>
     <title type="html"><![CDATA[多线程基础02 GCD]]></title>
-    <link href="http://royhomer.github.io/blog/2015/10/23/2/"/>
-    <updated>2015-10-23T13:53:07+08:00</updated>
-    <id>http://royhomer.github.io/blog/2015/10/23/2</id>
+    <link href="http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-2-gcd/"/>
+    <updated>2014-10-22T20:53:07+08:00</updated>
+    <id>http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-2-gcd</id>
     <content type="html"><![CDATA[<p>   了解完多线基础概念和NSTread的基本使用后，本文介绍GCD的主要用方法</p>
 
 <p>   GCD全称 : Grand Central Dispatch  &ndash; <code>伟大的中枢调度器</code></p>
@@ -405,13 +405,12 @@ dispatch_group_notify(group, queue, ^{
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[多线程基础01 概念和NSTread]]></title>
-    <link href="http://royhomer.github.io/blog/2015/10/22/di-%5B%3F%5D-pian-bo-ke/"/>
-    <updated>2015-10-22T16:21:39+08:00</updated>
-    <id>http://royhomer.github.io/blog/2015/10/22/di-[?]-pian-bo-ke</id>
-    <content type="html"><![CDATA[<p>   在软件开发中必不可少的会接触到一个词语&ndash;多线程；</p>
-
-<p>   那么什么是多线呢，本文主要是对多线程的基础知识做简单讲解</p>
+    <title type="html"><![CDATA[多线程基础01 概念和NSThread]]></title>
+    <link href="http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-1-gai-nian-he-nsthread/"/>
+    <updated>2014-10-22T20:21:39+08:00</updated>
+    <id>http://royhomer.github.io/blog/2014/10/22/duo-xian-cheng-ji-chu-1-gai-nian-he-nsthread</id>
+    <content type="html"><![CDATA[<p>   在软件开发中必不可少的会接触到一个词语&ndash;多线程；
+   那么什么是多线呢，本文主要是对多线程的基础知识做简单讲解。</p>
 
 <!-- more-->
 
