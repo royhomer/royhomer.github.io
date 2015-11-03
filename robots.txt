@@ -1,4 +1,0 @@
-User-agent: *
-Disallow: 
-
-Sitemap: http://royhomer.github.io/sitemap.xml 
