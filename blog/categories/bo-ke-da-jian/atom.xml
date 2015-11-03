@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 博客搭建 | My Octopress Blog]]></title>
+  <link href="http://royhomer.github.io/blog/categories/bo-ke-da-jian/atom.xml" rel="self"/>
+  <link href="http://royhomer.github.io/"/>
+  <updated>2015-11-03T17:47:28+08:00</updated>
+  <id>http://royhomer.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[怎样搭建gitbubpage博客]]></title>
+    <link href="http://royhomer.github.io/blog/2014/07/03/zen-yang-da-jian-gitbubpagebo-ke/"/>
+    <updated>2014-07-03T17:10:04+08:00</updated>
+    <id>http://royhomer.github.io/blog/2014/07/03/zen-yang-da-jian-gitbubpagebo-ke</id>
+    <content type="html"><![CDATA[
+]]></content>
+  </entry>
+  
+</feed>
