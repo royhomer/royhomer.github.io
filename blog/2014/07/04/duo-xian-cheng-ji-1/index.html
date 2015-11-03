@@ -1,0 +1,402 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>多线程基础01 概念和NSThread - Royhomer.luo Octopress Blog</title>
+  <meta name="author" content="Royhomer.luo (罗宏)">
+
+  
+  <meta name="description" content="在软件开发中必不可少的会接触到一个词语&ndash;多线程； 那么什么是多线呢，本文主要是对多线程的基础知识做简单讲解。 1 基本概念 1.1 进程的概念 进程是指在系统正在运行的一个应用程序，每个进程是相对独立 eg: 当我们启动QQ，那么就会开启一个进程 1.2 线程的概念 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://royhomer.github.io/blog/2014/07/04/duo-xian-cheng-ji-1/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Royhomer.luo Octopress Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<!-- <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"> -->
+<!-- <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"> -->
+<script type="text/javascript">
+	function addBlankTargetForLinks () {
+   		$('a[href^="http"]').each(function(){
+       		$(this).attr('target', '_blank');
+   		});
+ 	}
+ 
+ 	$(document).bind('DOMNodeInserted', function(event) {
+  	addBlankTargetForLinks();
+ 	});
+</script>
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Royhomer.luo Octopress Blog</a></h1>
+  
+    <h2>罗宏的技术博客</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="sitesearch" value="royhomer.github.io">
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">首页</a></li>
+  <li><a href="/blog/archives">所有文章</a></li>
+  <li><a href="/about">关于我</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h2 class="entry-title">多线程基础01 概念和NSThread</h2>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-07-04T12:21:39+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:21 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><!-- more-->
+
+
+<p>   在软件开发中必不可少的会接触到一个词语&ndash;多线程；
+   那么什么是多线呢，本文主要是对多线程的基础知识做简单讲解。</p>
+
+<hr />
+
+<h2>1 基本概念</h2>
+
+<h4>1.1 进程的概念</h4>
+
+<ul>
+<li><p>进程是指在系统正在运行的一个应用程序，每个进程是相对独立</p>
+
+<p>  eg: 当我们启动QQ，那么就会开启一个进程</p></li>
+</ul>
+
+
+<h4>1.2 线程的概念</h4>
+
+<ul>
+<li>每个进程中至少要有一条线程。（一个程序的所有任务都是在线程中执行的）</li>
+<li>一个线程中任务的执行是<code>串行的</code></li>
+</ul>
+
+
+<h4>1.3 多线程的概念</h4>
+
+<ul>
+<li>一个进程中可以开多条线程，每条线程可以并行（同时）执行
+
+<ul>
+<li>主线程 : 自动创建的，默认的 又叫UI线程</li>
+<li>子线程 : 又叫后台线程</li>
+</ul>
+</li>
+</ul>
+
+
+<h6>多线程原理</h6>
+
+<ul>
+<li>CPU同一时间只能有一条线程在工作，其实是CPU快速的在多条线程之间调度（切换）；调度频率快，就形成了多线程同时执行的“假象”。所以移动端不建议开太多线程一般在5条以内</li>
+</ul>
+
+
+<h6>多线程优缺点</h6>
+
+<ul>
+<li>优点：能适当提高执行效率、资源（CPU，内存）利用率</li>
+<li>缺点：开启线程占用内存，开销大，性能降低</li>
+</ul>
+
+
+<h6>多线程在iOS开发中的应用</h6>
+
+<ul>
+<li>默认有一条主线程（UI线程）有且只有一条。作用：负责显示和刷新界面，处理UI事件</li>
+<li><code>注意</code>：不要把耗时操作放在主线程中</li>
+</ul>
+
+
+<h2>2 iOS中多线程的实现方案</h2>
+
+<p><img src="/images/2014/07/duoxianchengjichu.png" alt="" /></p>
+
+<h2>3 pthread的例子</h2>
+
+<pre><code>- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // 创建一个线程标识符
+    pthread_t myrestrict;
+    
+    // 1param 线程标识符变量的地址, 2param 写NULL 3param 执行的的函数 4param NULL
+    pthread_create(&amp;myrestrict, NULL, run, NULL);
+}
+
+// 定义线程的函数
+void *run(void *data) {
+    
+    NSLog(@"%@", [NSThread currentThread]);
+    
+    return nil;
+}
+</code></pre>
+
+<h2>4 NSThread的基本用法</h2>
+
+<h4>创建方式1 创建后需启动</h4>
+
+<pre><code>    //创建线程
+    NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(download) object:nil];
+    // 启动线程
+   [thread start];
+ 
+</code></pre>
+
+<h4>创建方式2  创建后自动启动</h4>
+
+<pre><code>    // 创建后直接启动  传一个字符串
+    [NSThread detachNewThreadSelector:@selector(download2:) toTarget:self withObject:@"param"];
+    
+</code></pre>
+
+<h4>创建方式3  隐式启动</h4>
+
+<pre><code>    // 开启子线程
+    [self performSelectorInBackground:@selector(download) withObject:nil];
+    // 开启主线程
+    [self performSelector:@selector(download) withObject:nil];
+    // 开启传入的线程
+    [self performSelector:@selector(download) onThread:[NSThread currentThread] withObject:nil waitUntilDone:NO];
+</code></pre>
+
+<h4>其它常用方法</h4>
+
+<pre><code>    // 获取当前线程
+    NSThread *current = [NSThread currentThread];
+    // 获取主线程
+    NSThread *main = [NSThread mainThread];
+    // 判断是否主线程-类方法
+    BOOL isMain = [NSThread isMainThread];
+    // 判断是否主线程-对象方法
+    BOOL isMain2 = [main isMainThread];
+    // 给线程起名字
+    current.name = @"下载线程";
+    // 线程睡眠状态5秒
+    [NSThread sleepForTimeInterval:5.0];
+    // 线程睡眠从现在开始3秒以后的时间
+    [NSThread sleepUntilDate:[NSDate dateWithTimeIntervalSinceNow:3]];
+    // 线程退出 线程进入死亡状态
+    [NSThread exit];
+</code></pre>
+
+<h4>线程之间的通信</h4>
+
+<pre><code>[self performSelectorOnMainThread:@selector(method) withObject:nil waitUntilDone:YES];
+
+[self performSelector:@selector(method) onThread:[NSThread mainThread] withObject:nil waitUntilDone:YES];
+</code></pre>
+
+<ul>
+<li>waitUntilDone: 是否等待执行完   performSelector:执行的方法  withObject: 传参数</li>
+</ul>
+
+
+<h2>5.线程安全</h2>
+
+<ul>
+<li><p>线程安全</p>
+
+<ul>
+<li>概念 : 多个线程夺取同一个资源，访问一个变量</li>
+<li>解决方案 : 加锁&ndash;线程锁, 互斥锁</li>
+<li>互斥锁的格式 : <code>@synchronized(self) { // 插入锁定代码 }</code></li>
+<li><code>注意</code> : 一份代码只能用一个锁, 多个锁无效</li>
+</ul>
+</li>
+<li><p>线程锁优缺点</p>
+
+<ul>
+<li>优点 : 能够有效防止因多线程抢夺资源造成的数据安全问题</li>
+<li>缺点 : 消耗大量CPU资源</li>
+</ul>
+</li>
+<li><p>线程同步</p>
+
+<ul>
+<li>多条线程在同一条线上执行（按顺序执行）</li>
+<li>互斥锁就运用了线程同步</li>
+</ul>
+</li>
+<li><p>原子属性和非原子属性</p>
+
+<ul>
+<li>atomic 会自动为setter方法加锁</li>
+<li>nonatomic 不会为setter方法  推荐使用这个</li>
+</ul>
+</li>
+</ul>
+
+
+<h2>6.多线程状态示意图</h2>
+
+<h5>在了解完线程安全后咱们再看看完整的线程状态示意图</h5>
+
+<p><img src="/images/2014/07/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="" /></p>
+
+<p>   </p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Royhomer.luo (罗宏)</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-07-04T12:21:39+08:00'><span class='date'><span class='date-month'>Jul</span> <span class='date-day'>4</span><span class='date-suffix'>th</span>, <span class='date-year'>2014</span></span> <span class='time'>12:21 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/duo-xian-cheng/'>多线程</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/07/03/zen-yang-da-jian-gitbubpagebo-ke/" title="Previous Post: 搭建一个github博客基于Octopress">&laquo; 搭建一个github博客基于Octopress</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014/07/05/duo-xian-cheng-ji-2/" title="Next Post: 多线程基础02 GCD">多线程基础02 GCD &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>文章分类</h1>
+  <ul id="categories">
+    <li class='category'><a href='/blog/categories/octopressbo-ke-da-jian/'>octopress博客搭建 (1)</a></li>
+<li class='category'><a href='/blog/categories/dan-li-mo-shi-xiang-guan/'>单例模式相关 (1)</a></li>
+<li class='category'><a href='/blog/categories/duo-xian-cheng/'>多线程 (3)</a></li>
+
+  </ul>
+</section><section>
+  <h1>😃最近文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/07/15/dan-li-mo-shi/">单例模式</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/07/duo-xian-cheng-ji-3/">多线程基础03 NSOperation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/05/duo-xian-cheng-ji-2/">多线程基础02 GCD</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/04/duo-xian-cheng-ji-1/">多线程基础01 概念和NSThread</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/07/03/zen-yang-da-jian-gitbubpagebo-ke/">搭建一个github博客基于Octopress</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  &copy; 2015 - Royhomer.luo (罗宏) -
+  <span class="credit"> 基于 <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

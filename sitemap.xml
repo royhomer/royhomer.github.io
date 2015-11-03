@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://royhomer.github.io/blog/2014/07/15/dan-li-mo-shi/</loc>
+    <lastmod>2014-07-15T19:13:20+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://royhomer.github.io/blog/2014/07/07/duo-xian-cheng-ji-3/</loc>
+    <lastmod>2014-07-07T12:56:07+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://royhomer.github.io/blog/2014/07/05/duo-xian-cheng-ji-2/</loc>
+    <lastmod>2014-07-05T12:53:07+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://royhomer.github.io/blog/2014/07/04/duo-xian-cheng-ji-1/</loc>
+    <lastmod>2014-07-04T12:21:39+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://royhomer.github.io/blog/2014/07/03/zen-yang-da-jian-gitbubpagebo-ke/</loc>
     <lastmod>2014-07-03T17:10:04+08:00</lastmod>
   </url>
@@ -14,6 +30,12 @@
     <loc>http://royhomer.github.io/about/</loc>
   </url>
   <url>
-    <loc>http://royhomer.github.io/blog/categories/bo-ke-da-jian/</loc>
+    <loc>http://royhomer.github.io/blog/categories/octopressbo-ke-da-jian/</loc>
+  </url>
+  <url>
+    <loc>http://royhomer.github.io/blog/categories/duo-xian-cheng/</loc>
+  </url>
+  <url>
+    <loc>http://royhomer.github.io/blog/categories/dan-li-mo-shi-xiang-guan/</loc>
   </url>
 </urlset>
