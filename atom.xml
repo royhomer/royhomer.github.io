@@ -4,7 +4,7 @@
   <title><![CDATA[Royhomer.luo Octopress Blog]]></title>
   <link href="http://royhomer.github.io/atom.xml" rel="self"/>
   <link href="http://royhomer.github.io/"/>
-  <updated>2015-11-03T19:43:31+08:00</updated>
+  <updated>2015-11-03T19:50:24+08:00</updated>
   <id>http://royhomer.github.io/</id>
   <author>
     <name><![CDATA[Royhomer.luo (罗宏)]]></name>
@@ -46,7 +46,7 @@ id _mySingleton;
 
 <p>如下图所示 : 不论调用多少次内存地址都一样。保证单例类的对象的唯一</p>
 
-<p><img src="http://royhomer.github.io/images/2014/07/danlimoshidayin1.png" alt="" /></p>
+<p><img src="http://royhomer.github.io/images/2014/07/danlidayin1.png" alt="" /></p>
 
 <p>2 我们还得考虑多个线程 同时实例化的时候 所以需要加线程锁 且在最外面加一层判断</p>
 
